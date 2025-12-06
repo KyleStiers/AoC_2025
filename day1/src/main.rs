@@ -16,6 +16,7 @@ fn find_new_pos(current_pos:i32, movement:(char,i32), p2_counter:&mut i32) -> i3
     if initial_units.abs() > 99 {
         units = initial_units % 100;
         //let full_turns = initial_units / 100;
+        println!("Adding {} to the count", initial_units / 100);
         *p2_counter += initial_units / 100;
     } else {
         units = initial_units;
@@ -24,7 +25,10 @@ fn find_new_pos(current_pos:i32, movement:(char,i32), p2_counter:&mut i32) -> i3
     if direction == 'L' {
         let result = pos - units;
         if result < 0 {
-            *p2_counter += 1;
+            println!("Movement result was {}, incrementing the count", result);
+            if result != 100 && result != 0{
+                *p2_counter += 1;
+            }
             return 100 - result.abs();
         }
         else {
@@ -32,13 +36,58 @@ fn find_new_pos(current_pos:i32, movement:(char,i32), p2_counter:&mut i32) -> i3
         }
     } else {
         let result = pos + units;
-        if result > 100 {
-            *p2_counter += 1;
+        if result >= 100 {
+            println!("Movement result was {}, incrementing the count", result);
+            if result != 100 && result != 0{
+                *p2_counter += 1;
+            }
             return result - 100;
         }
         else {
             return result;
         }
+    }
+}
+
+fn perform_rotation(pos: &mut i32, movement: (char, i32), p2_counter: &mut i32) {
+    let (direction, units) = movement;
+    *p2_counter += units / 100;
+    let rem: i32 = units % 100;
+    match direction {
+        'L' => {
+            let result: i32 = *pos - rem;
+            if result <= 0 {
+                if result == 0 {
+                    *pos = 0;
+                    return;
+                }
+                if *pos != 0 {
+                    *p2_counter += 1;
+                    println!("Dial passed 0 going left so incremented counter");
+                }
+                *pos = 100 - result.abs();
+            } else {
+                *pos = result;
+            }
+        },
+        'R' => {
+            let result: i32 = *pos + rem;
+            if result >= 100 {
+                if result == 100 {
+                    *pos = 0;
+                    return;
+                } else {
+                if *pos != 0 {
+                    *p2_counter += 1;
+                    println!("Dial passed 0 going right so incremented counter");
+                }
+                *pos = result - 100;
+                }
+            } else {
+                *pos = result;
+            }
+        },
+        _ => (),
     }
 }
 
@@ -53,6 +102,7 @@ fn main() -> io::Result<()> {
     let reader = BufReader::new(file);
 
     let mut pos : i32 = 50;
+    println!("The dial starts by pointing at {}", pos);
 
     // Loop over each line in the file
     for line_result in reader.lines() {
@@ -64,9 +114,16 @@ fn main() -> io::Result<()> {
             let direction = captures.get(1).map(|m| m.as_str()).unwrap_or("UP");
             let ticks = captures.get(2).map(|m| m.as_str()).unwrap_or("-1");
             //println!("Direction: {}, Ticks: {}", direction, ticks);
-            pos = find_new_pos(pos, (direction.chars().next().unwrap(),ticks.parse().expect("Failed to parse")), &mut protocol2_counter);
-            //println!("- The dial is rotated {}{} to point at {}", direction, ticks, pos);
+
+            let dir: char = direction.chars().next().unwrap();
+            let num: i32 = ticks.parse().expect("Failed to parse");
+
+            perform_rotation(&mut pos, (dir, num), &mut protocol2_counter);
+
+            // pos = find_new_pos(pos, (direction.chars().next().unwrap(),ticks.parse().expect("Failed to parse")), &mut protocol2_counter);
+            println!("- The dial is rotated {}{} to point at {}", direction, ticks, pos);
             if pos == 0 {
+                println!("Dial is at 0, adding 1 to both protocols");
                 //protocol1_counter += 1;
                 increment(&mut protocol1_counter);
                 increment(&mut protocol2_counter);
