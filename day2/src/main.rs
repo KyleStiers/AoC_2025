@@ -12,6 +12,7 @@ fn to_chunks(string: &str, chunk_size: usize) -> Vec<String> {
 
 fn is_valid(num:i64) -> bool{
     let num_str = num.to_string();
+    println!("Checking number: {}", num_str);
     if num_str.len() == 2 {
         if num_str.chars().nth(0) == num_str.chars().nth(1) {
             println!("Invalid number found: {}", num_str);
@@ -26,6 +27,10 @@ fn is_valid(num:i64) -> bool{
     divs.push(1);
     for div in divs.iter() {
         let chunks = to_chunks(&num_str, *div as usize);
+        if divs.len() == 1 {
+            println!("Checking chunks of size {}: {:?}", div, chunks);
+        }
+        // println!("Checking chunks of size {}: {:?}", div, chunks);
         if chunks.iter().all(|s| s == chunks.first().unwrap()) {
             println!("Invalid number found: {}", num_str);
             return false;
@@ -36,7 +41,7 @@ fn is_valid(num:i64) -> bool{
 }
 
 fn sum_range(total: &mut i64, start: i64, end: i64) {
-    for i in start..end+1 {
+    for i in start..=end {
         if !is_valid(i){
             *total += i;
         } else{
