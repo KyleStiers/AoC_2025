@@ -6,7 +6,7 @@ fn highest_joltage(substring: &str, vacancies:i32) -> (String, usize) {
     let mut idx :usize = 0;
     let mut max :i32 = 0;
     let numbers = substring.chars().collect::<Vec<char>>();
-    println!("Now checking substring: {}", substring);
+    // println!("Now checking substring: {}", substring);
     for i in 0..numbers.len() {
         let curr_num = numbers[i].to_digit(10).unwrap() as i32;
         if curr_num > max && i <= (substring.len() - vacancies as usize) {
@@ -30,9 +30,9 @@ fn main() -> io::Result<()> {
 
     // Loop over each line in the file
     for line_result in reader.lines() {
-        let max_batteries_on: i32 = 2;
+        let max_batteries_on: i32 = 12;
         let line = line_result?;
-        let mut batteries_left :i32 = 2;
+        let mut batteries_left :i32 = 12;
         let mut top_vals = vec![];
         let mut last_index: usize = 0;
 
@@ -41,13 +41,15 @@ fn main() -> io::Result<()> {
             continue;
         }
 
-        println!("{}",line);
+        // println!("{}",line);
         for on in 0..max_batteries_on {
             if batteries_left == 0 {
                 break
             }
             let mut val_to_add:String = String::new();
-            (val_to_add,last_index) = highest_joltage(&line[last_index as usize..], batteries_left);
+            let new_index:usize;
+            (val_to_add,new_index) = highest_joltage(&line[last_index as usize..], batteries_left);
+            last_index += new_index;
             top_vals.push(val_to_add);
             batteries_left -= 1;
         }
