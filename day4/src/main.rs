@@ -2,7 +2,8 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 use std::path::Path;
 
-fn check_position {
+fn check_position() {
+    println!("Checking position");
     // remap
 
     // if row is lower bound
@@ -21,18 +22,23 @@ fn check_position {
 fn main() -> io::Result<()> {
     // Specify the path to your text file
     let file_path = Path::new("test.txt");
-
+    
     // Open the file
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
-
-    //track total joltage
-    let mut total :i64 = 0;
-
+    
     // Loop over each line in the file
+    let mut rows :usize = 0;
+    let mut cols :usize = 0;
+    // let mut rows :usize = 0;
     for line_result in reader.lines() {
         let line = line_result?;
-
+        rows += 1;
+        cols = line.len();
     }
+    println!("Rows: {}, Cols: {}", rows, cols);
+    
+    let mut input_matrix: Vec<Vec<i32>> = vec![vec![0; cols]; rows];
+    
     Ok(())
 }
