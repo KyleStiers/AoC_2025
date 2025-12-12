@@ -45,7 +45,6 @@ fn check_adjacents(row: usize, col: usize, matrix: &Vec<Vec<i32>>) -> i32 {
     return sum;
 }
 
-
 fn main() -> io::Result<()> {
     // Specify the path to your text file
     let file_path = Path::new("input.txt");
@@ -63,10 +62,7 @@ fn main() -> io::Result<()> {
     let mut input_matrix: Vec<Vec<i32>> = vec![vec![0; cols]; rows];
     let mut copy_matrix: Vec<Vec<i32>> = vec![vec![0; cols]; rows];
 
-
-
-
-    loop { // TODO make this a loop that updates the matrix and then tries another round of refinement
+    loop {
 
         // Load up the initial matrix
         for (index, line) in lines.iter().enumerate() {
