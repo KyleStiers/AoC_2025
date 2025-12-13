@@ -25,10 +25,6 @@ fn main() -> io::Result<()> {
         line_array.push(line.chars().rev().collect());
     }
 
-    for (row_index, line) in line_array.iter().enumerate() {
-        println!("Line {}: {}", row_index, line);
-    }
-
     let mut current_pairs: Vec<usize> = Vec::new();
     let mut running_tally: Vec<usize> = Vec::new();
     let mut full_op : usize = 0;
