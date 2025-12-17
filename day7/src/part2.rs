@@ -64,7 +64,7 @@ fn main() -> io::Result<()> {
                 continue;
             }
 
-            // Edge cases: if on left or right edge, move straight down
+            // if on left or right edge, move straight down
             if *col == 0 || *col == cols - 1 {
                 let next_pos = (*row + 1, *col);
                 *next_paths.entry(next_pos).or_insert(0) += path_count;
