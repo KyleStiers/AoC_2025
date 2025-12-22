@@ -94,10 +94,8 @@ fn main() -> io::Result<()> {
     // Calculate total unique paths (sum of all paths in the last row)
     let total_unique_paths: usize = curr_paths.values().sum();
     
-    println!("===========================================");
     println!("Final positions on last row: {:?}", curr_paths);
     println!("Total unique paths from top to bottom: {}", total_unique_paths);
-    println!("===========================================");
 
     Ok(())
 }
